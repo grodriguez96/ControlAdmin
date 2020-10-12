@@ -1,0 +1,79 @@
+<div class="pie container mt-5">
+  <h2 class="text-center">EMPANADAS</h2>
+  <div class="example-container mat-elevation-z8">
+
+    <!-- Loading spinner and connection failed message -->
+    <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
+      <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+      <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+        Connection to the server could not be established, please try later again.
+      </div>
+    </div>
+
+    <div class="example-table-container" *ngIf="data">
+
+      <table mat-table [dataSource]="data" class="example-table">
+
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Variety Column -->
+        <ng-container matColumnDef="variety">
+          <th mat-header-cell *matHeaderCellDef>Variedad</th>
+          <td mat-cell *matCellDef="let row">{{row.variety}}</td>
+        </ng-container>
+
+        <!-- Price Column -->
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Precio</th>
+          <td mat-cell *matCellDef="let row">{{row.price}} $</td>
+        </ng-container>
+
+        <!-- Edit Column -->
+        <ng-container matColumnDef="edit">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button (click)="editOnePie(row)" mat-raised-button class="bg-info text-white">Editar</button>
+          </td>
+        </ng-container>
+
+        <!-- Delete Column -->
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row">
+            <button (click)="eliminateOnePie(row)" mat-raised-button color="warn">Eliminar</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <!-- Empty data message -->
+    <div *ngIf="isDataEmpty && !isRateLimitReached">
+      <h3 class="text-center">NO HAY DATOS EN EL REGISTRO.</h3>
+    </div>
+
+  </div>
+
+  <button mat-raised-button (click)="addPies()" color="primary" class="mt-5">+ Agregar</button>
+  <button mat-raised-button (click)="sendPies()" class="mt-5 ml-5 bg-info text-white"
+    *ngIf="selection.selected.length > 1"> Editar
+    seleccionados</button>
+  <button mat-raised-button (click)="eliminatePies()" class="mt-5 ml-5" color="warn"
+    *ngIf="selection.selected.length > 1"> Eliminar
+    seleccionados</button>
+
+</div>

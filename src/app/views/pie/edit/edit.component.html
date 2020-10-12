@@ -1,0 +1,30 @@
+<div class="container">
+  <h2 class="text-center m-5">EDITAR EMPANADA(S)</h2>
+  <form *ngIf="form" [formGroup]="form">
+    <div formArrayName="pie" *ngFor="let pieFormGroup of form.controls['pie'].controls; let i = index;">
+      <div [formGroupName]="i">
+
+
+        <table class="example-full-width m-auto" cellspacing="0">
+          <tr>
+            <td>
+              <mat-form-field class="example-full-width">
+                <mat-label>Variedad</mat-label>
+                <input matInput formControlName="variety">
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field class="example-full-width">
+                <mat-label>Precio $</mat-label>
+                <input matInput formControlName="price">
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </form>
+  <div class="text-center">
+    <button mat-raised-button (click)="onUpdate()" color="accent">Actualizar</button>
+  </div>
+</div>
