@@ -11,7 +11,7 @@ export class BdConnectionPieService {
   constructor(private http: HttpClient) {
   }
 
-  url = 'http://localhost:4000/pie'
+  url = 'https://powerful-journey-71632.herokuapp.com/pie'
   httpParams = new HttpParams()
 
   getAllPie() { /** Get all data in pie columns */
