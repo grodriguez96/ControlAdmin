@@ -5,9 +5,6 @@ import { PieComponent } from './pie.component';
 import { EditComponent } from './edit/edit.component'
 import { AddComponent } from './add/add.component';
 
-import { EditGuard } from '../../guards/edit.guard'
-import { AddGuard } from '../../guards/add.guard'
-
 const routes: Routes = [
   {
     path: '',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Pie } from '../../interfaces/pie/pie'
 
 
@@ -11,8 +11,7 @@ export class BdConnectionPieService {
   constructor(private http: HttpClient) {
   }
 
-  url = 'https://powerful-journey-71632.herokuapp.com/pie'
-  httpParams = new HttpParams()
+  url = 'http://localhost:4000/pie' /** https://powerful-journey-71632.herokuapp.com/pie */
 
   getAllPie() { /** Get all data in pie columns */
     return this.http.get<Pie[]>(this.url)

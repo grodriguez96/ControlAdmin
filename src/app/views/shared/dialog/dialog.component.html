@@ -1,0 +1,21 @@
+<div *ngIf="data.view == 'editM'">
+  <h1 mat-dialog-title class="title">Esta seguro que desea editar estas ({{data.pie.length}})
+    empanadas
+  </h1>
+  <div mat-dialog-content></div>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Volver</button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Si</button>
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="data.view == 'editO'">
+  <h1 mat-dialog-title class="title">Esta seguro que desea editar esta
+    empanada
+  </h1>
+  <div mat-dialog-content></div>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Volver</button>
+    <button mat-button [mat-dialog-close]="true" (click)="clay()" cdkFocusInitial>Si</button>
+  </mat-dialog-actions>
+</div>

@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { Pie } from '../../interfaces/pie/pie'
 import { BdConnectionPieService } from '../../services/pie/bd-connection-pie.service'
 import { ProvidersService } from './services/providers.service'
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../shared/dialog/dialog.component'
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 
 @Component({
@@ -21,8 +24,23 @@ export class PieComponent {
   data: Pie[];
   selection = new SelectionModel<Pie>(true, []);
 
-  constructor(private connect: BdConnectionPieService, private provider: ProvidersService, private router: Router) {
+  constructor(private connect: BdConnectionPieService, private provider: ProvidersService, private router: Router, public dialog: MatDialog) {
     this.initData();
+  }
+
+  async openDialog(view: string): Promise<boolean> {
+    let value: Promise<boolean>;
+    const resultD = this.dialog.open(DialogComponent, {
+      data: {
+        view: view,
+        pie: this.selection.selected,
+      },
+    });
+
+    resultD.afterClosed().subscribe(result => {
+      value = result;
+    })
+    return value;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -48,7 +66,7 @@ export class PieComponent {
   }
 
   /**Inicializate data */
-  initData() {
+  initData(): void {
     this.connect.getAllPie().subscribe(data => {
       this.updateLocalData(data)
       this.isDataEmpty = this.verifyDataEmpty();
@@ -59,11 +77,13 @@ export class PieComponent {
 
   /** Edit only one row */
   editOnePie(row?: Pie): void {
-    if (this.selection.selected.length == 0) { //** Pressed the edit button without check mark */
-      this.selection.toggle(row);
-      this.sendPies();
-    } else if (this.selection.selected.length == 1 && this.selection.selected[0].id == row.id) { //** Pressed the edit button only in the same row that check mark is and denies multiple check marks*/
-      this.sendPies();
+    if (this.openDialog("editO")) {
+      if (this.selection.selected.length == 0) { //** Pressed the edit button without check mark */
+        this.selection.toggle(row);
+        this.sendPies();
+      } else if (this.selection.selected.length == 1 && this.selection.selected[0].id == row.id) { //** Pressed the edit button only in the same row that check mark is and denies multiple check marks*/
+        this.sendPies();
+      }
     }
   }
 
