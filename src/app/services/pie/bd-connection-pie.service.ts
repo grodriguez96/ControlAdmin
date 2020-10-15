@@ -11,8 +11,8 @@ export class BdConnectionPieService {
   constructor(private http: HttpClient) {
   }
 
-  online = 'http://localhost:4000/pie'
-  local = 'https://powerful-journey-71632.herokuapp.com/pie'
+  local = 'http://localhost:4000/pie'
+  online = 'https://powerful-journey-71632.herokuapp.com/pie'
 
   url = this.online
 
