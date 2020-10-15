@@ -4,9 +4,8 @@ import { Router } from '@angular/router';
 import { Pie } from '../../interfaces/pie/pie'
 import { BdConnectionPieService } from '../../services/pie/bd-connection-pie.service'
 import { ProvidersService } from './services/providers.service'
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from '../shared/dialog/dialog.component'
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 
 @Component({
@@ -26,21 +25,6 @@ export class PieComponent {
 
   constructor(private connect: BdConnectionPieService, private provider: ProvidersService, private router: Router, public dialog: MatDialog) {
     this.initData();
-  }
-
-  async openDialog(view: string): Promise<boolean> {
-    let value: Promise<boolean>;
-    const resultD = this.dialog.open(DialogComponent, {
-      data: {
-        view: view,
-        pie: this.selection.selected,
-      },
-    });
-
-    resultD.afterClosed().subscribe(result => {
-      value = result;
-    })
-    return value;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -76,15 +60,32 @@ export class PieComponent {
   }
 
   /** Edit only one row */
-  editOnePie(row?: Pie): void {
-    if (this.openDialog("editO")) {
-      if (this.selection.selected.length == 0) { //** Pressed the edit button without check mark */
-        this.selection.toggle(row);
-        this.sendPies();
-      } else if (this.selection.selected.length == 1 && this.selection.selected[0].id == row.id) { //** Pressed the edit button only in the same row that check mark is and denies multiple check marks*/
-        this.sendPies();
-      }
+  editOnePie(row: Pie): void {
+    if (this.selection.selected.length == 0) { //** Pressed the edit button without check mark */
+      const resultD: MatDialogRef<DialogComponent, any> = this.openDialog('editO')
+
+      resultD.afterClosed().subscribe(confirm => {
+        if (confirm) {
+          this.selection.toggle(row);
+          this.sendPies();
+        }
+
+      })
+    } else if (this.selection.selected.length == 1 && this.selection.selected[0].id == row.id) { //** Pressed the edit button only in the same row that check mark is and denies multiple check marks*/
+      const resultD: MatDialogRef<DialogComponent, any> = this.openDialog('editO')
+
+      resultD.afterClosed().subscribe(confirm => {
+        if (confirm) this.sendPies();
+      })
     }
+  }
+
+  /** Edit multiples row */
+  editMultiplePies() {
+    const resultD: MatDialogRef<DialogComponent, any> = this.openDialog('editM')
+    resultD.afterClosed().subscribe(confirm => {
+      if (confirm) this.sendPies();
+    })
   }
 
   /** Send data to services and navigate to edit page */
@@ -96,14 +97,20 @@ export class PieComponent {
   }
 
   /** Eliminate only one row */
-  eliminateOnePie(row?: Pie): void {
+  eliminateOnePie(row: Pie): void {
     if (this.selection.selected.length == 0 || (this.selection.selected.length == 1 && this.selection.selected[0].id == row.id)) { //** Pressed the eliminate button without check mark, or the eliminate button only in the same row that check mark is and denies multiple check marks */
-      this.isLoadingResults = true;
-      this.connect.deletePie(row.id).subscribe(data => {
-        this.updateLocalData(data);
-        this.isDataEmpty = this.verifyDataEmpty();
-      }, () => {
-        this.connectionFailed();
+      const resultD: MatDialogRef<DialogComponent, any> = this.openDialog('eliminateO')
+      resultD.afterClosed().subscribe(confirm => {
+        if (confirm) {
+          this.isLoadingResults = true;
+          this.connect.deletePie(row.id).subscribe(data => {
+            this.updateLocalData(data);
+            this.isDataEmpty = this.verifyDataEmpty();
+          }, () => {
+            this.connectionFailed();
+          })
+        }
+
       })
     }
   }
@@ -139,5 +146,16 @@ export class PieComponent {
   addPies() {
     this.provider.addStatus = true;
     this.router.navigate(["pie/add"])
+  }
+
+  /** Open dialgo to confirm action */
+  openDialog(option: string) {
+    const resultD = this.dialog.open(DialogComponent, {
+      data: {
+        option: option,
+        pie: this.selection.selected,
+      },
+    });
+    return resultD;
   }
 }

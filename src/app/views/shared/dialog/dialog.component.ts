@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { from, Observable } from 'rxjs';
 import { Pie } from 'src/app/interfaces/pie/pie';
 
 @Component({
@@ -10,15 +9,8 @@ import { Pie } from 'src/app/interfaces/pie/pie';
 })
 export class DialogComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { pie: Pie[], view: string }) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { pie: Pie[], option: string }) {
   }
-
-  result$ = from([true, false]);
-
-  clay() {
-    this.result$.subscribe(console.log)
-  }
-
 
 
 }

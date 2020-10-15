@@ -1,0 +1,13 @@
+<div class="text-uppercase" *ngIf="data.error">
+  <div mat-dialog-content> ERROR: {{data.message}}</div>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cerrar</button>
+  </mat-dialog-actions>
+</div>
+
+<div class="text-uppercase" *ngIf="!data.error">
+  <div mat-dialog-content> {{data.message}}</div>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cerrar</button>
+  </mat-dialog-actions>
+</div>

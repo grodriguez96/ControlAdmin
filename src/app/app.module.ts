@@ -15,6 +15,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { ErrorDialogComponent } from './views/shared/error-dialog/error-dialog.component';
 
 
 
@@ -22,6 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [
     AppComponent,
     DialogComponent,
+    ErrorDialogComponent,
   ],
   imports: [
     BrowserModule,
