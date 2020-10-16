@@ -4,9 +4,8 @@ import { Router } from '@angular/router';
 import { Pie } from 'src/app/interfaces/pie/pie';
 import { BdConnectionPieService } from 'src/app/services/pie/bd-connection-pie.service';
 import { ProvidersService } from '../services/providers.service';
-import { ErrorDialogComponent } from '../../shared/error-dialog/error-dialog.component'
+import { StatusServerDialog } from '../../shared/status-server-dialog/status-server-dialog.component'
 import { MatDialog } from '@angular/material/dialog';
-
 
 @Component({
   selector: 'app-edit',
@@ -21,14 +20,12 @@ export class EditComponent {
     this.initForm();
   }
 
-  openDialog(message: string, error: boolean) {
-    const resultD = this.dialog.open(ErrorDialogComponent, {
+  openDialog(message: string) {
+    this.dialog.open(StatusServerDialog, {
       data: {
-        error: error,
         message: message,
       },
     });
-    return resultD;
   }
 
   initForm() {
@@ -45,7 +42,7 @@ export class EditComponent {
     })
   }
 
-  onUpdate() {
+  update() {
     if (this.form.value['pie'].length == 1) {
       const data: Pie = {
         variety: this.form.get('pie').value[0].variety,
@@ -54,20 +51,21 @@ export class EditComponent {
       const id = this.form.get('pie').value[0].id;
 
       this.connect.putPie(data, id).subscribe((message) => {
-        this.openDialog("Dato modificado satifactoriamente", false)
+        const mess = JSON.stringify(message.message)
+        this.openDialog(mess.replace(/\"/g, ""))
         this.router.navigate(['pie'])
-        console.log(message)
       }, (error) => {
-        this.openDialog(error.error.message, true)
+        this.openDialog(error.error.message)
       })
 
     } else {
-      this.connect.putPies(this.form.value['pie']).subscribe(() => {
-        this.openDialog("Datos modificados satifactoriamente", false)
+      this.connect.putPies(this.form.value['pie']).subscribe((message) => {
+        const mess = JSON.stringify(message.message)
+        this.openDialog(mess.replace(/\"/g, ""))
         this.router.navigate(['pie'])
 
       }, (error) => {
-        this.openDialog(error.error.message, true)
+        this.openDialog(error.error.message)
       })
     }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Pie } from '../../interfaces/pie/pie'
+import { Message } from '../../interfaces/dialog/message'
 
 
 @Injectable({
@@ -21,15 +22,15 @@ export class BdConnectionPieService {
   }
 
   postPie(data: Array<number>) { /** Create one or multiples pies */
-    return this.http.post(this.url, data)
+    return this.http.post<Message>(this.url, data)
   }
 
   putPies(data: Array<Pie>) { /** Edit data of multiples pies */
-    return this.http.put(this.url, data)
+    return this.http.put<Message>(this.url, data)
   }
 
   putPie(data: Pie, id: number) { /*** Edit data of one pie */
-    return this.http.put(`${this.url}/${id}`, data)
+    return this.http.put<Message>(`${this.url}/${id}`, data)
   }
 
   getPie(id: number) { /** Get data of one pie. IMPORTANT: NOT IMPLEMENTED YET !*/
