@@ -1,5 +1,8 @@
 <div class="add">
-  <form *ngIf="form" [formGroup]="form">
+
+  <h2 class="text-center mt-3 mb-0"> Ingrese las empanadas que desee agregar</h2> <br>
+
+  <form *ngIf="form" [formGroup]="form" class="form">
     <div formArrayName="pies" *ngFor="let item of form.get('pies').controls; let i = index;">
       <div [formGroupName]="i">
         <table class="example-full-width m-auto" cellspacing="0">
@@ -8,12 +11,18 @@
               <mat-form-field class="example-full-width">
                 <mat-label>Variedad</mat-label>
                 <input matInput formControlName="variety" placeholder="Ej. Carne">
+                <mat-error>
+                  Este campo es obligatorio.
+                </mat-error>
               </mat-form-field>
             </td>
             <td>
               <mat-form-field class="example-full-width">
                 <mat-label>Precio $</mat-label>
-                <input matInput formControlName="price" placeholder="Ej. 5.75">
+                <input matInput formControlName="price" placeholder="Ej. 5.75" type="number">
+                <mat-error>
+                  Este campo es obligatorio.
+                </mat-error>
               </mat-form-field>
             </td>
           </tr>
@@ -23,12 +32,10 @@
     </div>
   </form>
 
-  <div class="text-center align-bottom">
-    <button mat-raised-button (click)="addInputPies()" color="primary">+ Agregar otra empanada</button>
+  <div class="buttons text-center">
+    <button mat-raised-button (click)="back()" color="warn">Volver</button>
+    <button mat-raised-button (click)="addInputPies()">+ Agregar otra
+      empanada</button>
+    <button mat-raised-button (click)="addPies()" [disabled]="!form.valid" color="primary">Finalizar</button>
   </div>
-
-  <div class="text-center align-bottom mt-5">
-    <button mat-raised-button (click)="addPies()" color="warn">Finalizar</button>
-  </div>
-
 </div>

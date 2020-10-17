@@ -15,7 +15,7 @@ export class BdConnectionPieService {
   local = 'http://localhost:4000/pie'
   online = 'https://powerful-journey-71632.herokuapp.com/pie'
 
-  url = this.online
+  url = this.local
 
   getAllPie() { /** Get all data in pie columns */
     return this.http.get<Pie[]>(this.url)

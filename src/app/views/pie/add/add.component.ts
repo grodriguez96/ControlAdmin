@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { BdConnectionPieService } from 'src/app/services/pie/bd-connection-pie.service';
-import { ProvidersService } from '../services/providers.service';
+import { Component } from '@angular/core'
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { BdConnectionPieService } from 'src/app/services/pie/bd-connection-pie.service'
+import { ProvidersService } from '../services/providers.service'
 import { StatusServerDialog } from '../../shared/status-server-dialog/status-server-dialog.component'
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog'
 
 @Component({
   selector: 'app-add',
@@ -30,10 +30,14 @@ export class AddComponent {
     });
   }
 
+  back() {
+    this.router.navigate(['pie'])
+  }
+
   createPie(): FormGroup {
     return this.fb.group({
-      variety: '',
-      price: ''
+      variety: new FormControl('', [Validators.required]),
+      price: new FormControl('', [Validators.required])
     });
   }
 

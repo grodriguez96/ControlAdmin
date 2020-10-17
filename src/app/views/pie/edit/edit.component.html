@@ -10,13 +10,19 @@
             <td>
               <mat-form-field class="example-full-width">
                 <mat-label>Variedad</mat-label>
-                <input matInput formControlName="variety">
+                <input matInput formControlName="variety" type="text" class="text-capitalize">
+                <mat-error>
+                  Este campo es obligatorio.
+                </mat-error>
               </mat-form-field>
             </td>
             <td>
               <mat-form-field class="example-full-width">
                 <mat-label>Precio $</mat-label>
-                <input matInput formControlName="price">
+                <input matInput formControlName="price" type="number">
+                <mat-error>
+                  Este campo es obligatorio.
+                </mat-error>
               </mat-form-field>
             </td>
           </tr>
@@ -24,7 +30,8 @@
       </div>
     </div>
   </form>
-  <div class="text-center">
-    <button mat-raised-button (click)="update()" color="accent">Actualizar</button>
+  <div class="buttons text-center">
+    <button mat-raised-button (click)="back()" color="warn">Volver</button>
+    <button mat-raised-button (click)="update()" [disabled]="!form.valid" color="accent">Actualizar</button>
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Pie } from 'src/app/interfaces/pie/pie';
 import { BdConnectionPieService } from 'src/app/services/pie/bd-connection-pie.service';
@@ -33,9 +33,9 @@ export class EditComponent {
       pie: this.fb.array(
         this.provider.editData.map(pie =>
           this.fb.group({
-            id: [pie.id],
-            variety: [pie.variety],
-            price: [pie.price],
+            id: new FormControl(pie.id),
+            variety: new FormControl(pie.variety, [Validators.required]),
+            price: new FormControl(pie.price, [Validators.required]),
           })
         )
       )
@@ -70,5 +70,10 @@ export class EditComponent {
     }
 
   }
+
+  back() {
+    this.router.navigate(['pie'])
+  }
+
 
 }
