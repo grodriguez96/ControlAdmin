@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { Pie } from '../../interfaces/pie/pie'
 import { BdConnectionPieService } from '../../services/pie/bd-connection-pie.service'
 import { ProvidersService } from './services/providers.service'
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../shared/dialog/dialog.component'
+import { StatusServerDialog } from '../shared/status-server-dialog/status-server-dialog.component';
 
 
 @Component({
@@ -53,7 +54,6 @@ export class PieComponent {
   initData(): void {
     this.connect.getAllPie().subscribe(data => {
       this.updateLocalData(data)
-      this.isDataEmpty = this.verifyDataEmpty();
     }, () => {
       this.connectionFailed()
     })
@@ -62,7 +62,7 @@ export class PieComponent {
   /** Edit only one row */
   editOnePie(row: Pie): void {
     if (this.selection.selected.length == 0) { //** Pressed the edit button without check mark */
-      const resultD: MatDialogRef<DialogComponent, any> = this.openDialog('editO')
+      const resultD = this.openDialogConfirm('editO')
 
       resultD.afterClosed().subscribe(confirm => {
         if (confirm) {
@@ -72,7 +72,7 @@ export class PieComponent {
 
       })
     } else if (this.selection.selected.length == 1 && this.selection.selected[0].id == row.id) { //** Pressed the edit button only in the same row that check mark is and denies multiple check marks*/
-      const resultD: MatDialogRef<DialogComponent, any> = this.openDialog('editO')
+      const resultD = this.openDialogConfirm('editO')
 
       resultD.afterClosed().subscribe(confirm => {
         if (confirm) this.sendPies();
@@ -82,7 +82,7 @@ export class PieComponent {
 
   /** Edit multiples row */
   editMultiplePies() {
-    const resultD: MatDialogRef<DialogComponent, any> = this.openDialog('editM')
+    const resultD = this.openDialogConfirm('editM')
     resultD.afterClosed().subscribe(confirm => {
       if (confirm) this.sendPies();
     })
@@ -99,13 +99,14 @@ export class PieComponent {
   /** Eliminate only one row */
   eliminateOnePie(row: Pie): void {
     if (this.selection.selected.length == 0 || (this.selection.selected.length == 1 && this.selection.selected[0].id == row.id)) { //** Pressed the eliminate button without check mark, or the eliminate button only in the same row that check mark is and denies multiple check marks */
-      const resultD: MatDialogRef<DialogComponent, any> = this.openDialog('eliminateO')
-      resultD.afterClosed().subscribe(confirm => {
+      this.openDialogConfirm('eliminateO').afterClosed().subscribe(confirm => {
         if (confirm) {
           this.isLoadingResults = true;
-          this.connect.deletePie(row.id).subscribe(data => {
-            this.updateLocalData(data);
-            this.isDataEmpty = this.verifyDataEmpty();
+          this.connect.deletePie(row.id).subscribe(message => {
+            const mess = JSON.stringify(message.message)
+            this.openDialogStatus(mess.replace(/\"/g, ""))
+            this.initData();
+            this.selection.clear();
           }, () => {
             this.connectionFailed();
           })
@@ -117,17 +118,27 @@ export class PieComponent {
 
   /** Eliminate multiple rows */
   eliminatePies() {
-    const ids: Array<number> = []
-    for (const pie of this.selection.selected) {
-      ids.push(pie.id);
-    }
-    this.connect.deletePies(ids);
+
+    this.openDialogConfirm('eliminateM').afterClosed().subscribe(confirm => {
+      if (confirm) {
+        this.isLoadingResults = true;
+        this.connect.deletePies(this.selection.selected).subscribe(message => {
+          const mess = JSON.stringify(message.message)
+          this.openDialogStatus(mess.replace(/\"/g, ""))
+          this.initData();
+          this.selection.clear();
+        }, () => {
+          this.connectionFailed();
+        })
+      }
+    })
   }
 
   /** Upadate local data whit HTTP data */
   updateLocalData(data: Pie[]): void {
     this.data = data;
     this.isLoadingResults = false;
+    this.isDataEmpty = this.verifyDataEmpty();
   }
 
   /** Show not connection whith the server */
@@ -149,7 +160,7 @@ export class PieComponent {
   }
 
   /** Open dialgo to confirm action */
-  openDialog(option: string) {
+  openDialogConfirm(option: string) {
     const resultD = this.dialog.open(DialogComponent, {
       data: {
         option: option,
@@ -157,5 +168,13 @@ export class PieComponent {
       },
     });
     return resultD;
+  }
+
+  openDialogStatus(message: string) {
+    this.dialog.open(StatusServerDialog, {
+      data: {
+        message: message,
+      },
+    });
   }
 }

@@ -15,13 +15,13 @@ export class BdConnectionPieService {
   local = 'http://localhost:4000/pie'
   online = 'https://powerful-journey-71632.herokuapp.com/pie'
 
-  url = this.online
+  url = this.local
 
   getAllPie() { /** Get all data in pie columns */
     return this.http.get<Pie[]>(this.url)
   }
 
-  postPie(data: Array<number>) { /** Create one or multiples pies */
+  postPie(data: Array<Pie>) { /** Create one or multiples pies */
     return this.http.post<Message>(this.url, data)
   }
 
@@ -37,11 +37,11 @@ export class BdConnectionPieService {
     return this.http.get(`${this.url}/${id}`)
   }
 
-  deletePie(id: number) { /**Delete data of one pie */
-    return this.http.delete<Pie[]>(`${this.url}/${id}`)
+  deletePie(id: number) { /**Delete data of one pies */
+    return this.http.delete<Message>(`${this.url}/${id}`)
   }
 
-  deletePies(ids: Array<number>) { /** Delete data of multiples pies. IMPORTANT: NOT IMPLEMENTED YET ! */
-    console.log("TODAVIA NO ESTA HABILITADO")
+  deletePies(data: Pie[]) {
+    return this.http.put<Message>('http://localhost:4000/deletepies', data)
   }
 }

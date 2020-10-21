@@ -44,7 +44,8 @@
         <ng-container matColumnDef="edit">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row">
-            <button (click)="editOnePie(row)" mat-raised-button class="bg-info text-white">Editar</button>
+            <button (click)="editOnePie(row)" mat-raised-button class="bg-info text-white"
+              *ngIf="!isLoadingResults">Editar</button>
           </td>
         </ng-container>
 
@@ -52,7 +53,8 @@
         <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row">
-            <button (click)="eliminateOnePie(row)" mat-raised-button color="warn">Eliminar</button>
+            <button (click)="eliminateOnePie(row)" mat-raised-button color="warn"
+              *ngIf="!isLoadingResults">Eliminar</button>
           </td>
         </ng-container>
 
@@ -68,11 +70,13 @@
 
   </div>
 
-  <button mat-raised-button (click)="addPies()" color="primary" class="mt-5">+ Agregar</button>
+  <button mat-raised-button (click)="addPies()" color="primary" class="mt-5" *ngIf="!isLoadingResults">+
+    Agregar</button>
   <button mat-raised-button (click)="editMultiplePies()" class="mt-5 ml-5 bg-info text-white"
-    *ngIf="selection.selected.length > 1"> Editar
+    *ngIf="selection.selected.length > 1 && !isLoadingResults"> Editar
     seleccionados</button>
-  <button mat-raised-button class="mt-5 ml-5" color="warn" *ngIf="selection.selected.length > 1">
+  <button mat-raised-button (click)="eliminatePies()" class="mt-5 ml-5" color="warn"
+    *ngIf="selection.selected.length > 1 && !isLoadingResults">
     Eliminar
     seleccionados</button>
 

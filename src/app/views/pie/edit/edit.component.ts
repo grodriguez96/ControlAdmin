@@ -50,7 +50,7 @@ export class EditComponent {
       }
       const id = this.form.get('pie').value[0].id;
 
-      this.connect.putPie(data, id).subscribe((message) => {
+      this.connect.putPie(data, id).subscribe(message => {
         const mess = JSON.stringify(message.message)
         this.openDialog(mess.replace(/\"/g, ""))
         this.router.navigate(['pie'])
@@ -59,7 +59,7 @@ export class EditComponent {
       })
 
     } else {
-      this.connect.putPies(this.form.value['pie']).subscribe((message) => {
+      this.connect.putPies(this.form.value['pie']).subscribe(message => {
         const mess = JSON.stringify(message.message)
         this.openDialog(mess.replace(/\"/g, ""))
         this.router.navigate(['pie'])
