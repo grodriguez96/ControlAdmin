@@ -19,6 +19,7 @@ export class PieComponent {
 
   displayedColumns: string[] = ['select', 'variety', 'price', 'edit', 'delete'];
   isLoadingResults = true;
+  isDeletingResults = false;
   isRateLimitReached = false;
   isDataEmpty = false;
   data: Pie[];
@@ -101,7 +102,7 @@ export class PieComponent {
     if (this.selection.selected.length == 0 || (this.selection.selected.length == 1 && this.selection.selected[0].id == row.id)) { //** Pressed the eliminate button without check mark, or the eliminate button only in the same row that check mark is and denies multiple check marks */
       this.openDialogConfirm('eliminateO').afterClosed().subscribe(confirm => {
         if (confirm) {
-          this.isLoadingResults = true;
+          this.isDeletingResults = true;
           this.connect.deletePie(row.id).subscribe(message => {
             const mess = JSON.stringify(message.message)
             this.openDialogStatus(mess.replace(/\"/g, ""))
@@ -118,10 +119,9 @@ export class PieComponent {
 
   /** Eliminate multiple rows */
   eliminatePies() {
-
     this.openDialogConfirm('eliminateM').afterClosed().subscribe(confirm => {
       if (confirm) {
-        this.isLoadingResults = true;
+        this.isDeletingResults = true;
         this.connect.deletePies(this.selection.selected).subscribe(message => {
           const mess = JSON.stringify(message.message)
           this.openDialogStatus(mess.replace(/\"/g, ""))
@@ -137,6 +137,7 @@ export class PieComponent {
   /** Upadate local data whit HTTP data */
   updateLocalData(data: Pie[]): void {
     this.data = data;
+    this.isDeletingResults = false;
     this.isLoadingResults = false;
     this.isDataEmpty = this.verifyDataEmpty();
   }

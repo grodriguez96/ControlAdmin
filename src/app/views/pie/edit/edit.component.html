@@ -1,14 +1,18 @@
-<div class="container">
+<div class="container pb-5">
   <h2 class="text-center m-5">EDITAR EMPANADA(S)</h2>
-  <form *ngIf="form" [formGroup]="form">
-    <div formArrayName="pie" *ngFor="let pieFormGroup of form.controls['pie'].controls; let i = index;">
+
+  <!-- Form container -->
+  <form *ngIf="form && !isSavingForm" [formGroup]="form">
+    <div formArrayName="pie" *ngFor="let pieFormGroup of formData.controls; let i = index;">
       <div [formGroupName]="i">
 
-
-        <table class="example-full-width m-auto" cellspacing="0">
+        <!-- Table container-->
+        <table class="m-auto" cellspacing="0">
           <tr>
             <td>
-              <mat-form-field class="example-full-width">
+
+              <!-- Variety input-->
+              <mat-form-field>
                 <mat-label>Variedad</mat-label>
                 <input matInput formControlName="variety" type="text" class="text-capitalize">
                 <mat-error>
@@ -17,7 +21,9 @@
               </mat-form-field>
             </td>
             <td>
-              <mat-form-field class="example-full-width">
+
+              <!-- Price input-->
+              <mat-form-field>
                 <mat-label>Precio $</mat-label>
                 <input matInput formControlName="price" type="number">
                 <mat-error>
@@ -30,8 +36,13 @@
       </div>
     </div>
   </form>
-  <div class="buttons text-center">
+
+
+  <div class="buttons text-center" *ngIf="!isSavingForm">
     <button mat-raised-button (click)="back()" color="warn">Volver</button>
     <button mat-raised-button (click)="update()" [disabled]="!form.valid" color="accent">Actualizar</button>
   </div>
+
+  <!-- Spinner while data is saving in the BD -->
+  <app-spinner textSpinner='Guardando datos. Por favor aguarde unos segundos.' *ngIf="isSavingForm"></app-spinner>
 </div>

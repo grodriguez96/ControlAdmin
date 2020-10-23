@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Pie } from 'src/app/interfaces/pie/pie';
 import { BdConnectionPieService } from 'src/app/services/pie/bd-connection-pie.service';
@@ -14,10 +14,11 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class EditComponent {
   form: FormGroup;
-
+  isSavingForm: boolean;
 
   constructor(private provider: ProvidersService, private fb: FormBuilder, private connect: BdConnectionPieService, private router: Router, public dialog: MatDialog) {
     this.initForm();
+    this.isSavingForm = false;
   }
 
   openDialog(message: string) {
@@ -43,6 +44,7 @@ export class EditComponent {
   }
 
   update() {
+    this.isSavingForm = true;
     if (this.form.value['pie'].length == 1) {
       const data: Pie = {
         variety: this.form.get('pie').value[0].variety,
@@ -56,6 +58,7 @@ export class EditComponent {
         this.router.navigate(['pie'])
       }, (error) => {
         this.openDialog(error.error.message)
+        this.isSavingForm = false;
       })
 
     } else {
@@ -66,6 +69,7 @@ export class EditComponent {
 
       }, (error) => {
         this.openDialog(error.error.message)
+        this.isSavingForm = false;
       })
     }
 
@@ -75,5 +79,6 @@ export class EditComponent {
     this.router.navigate(['pie'])
   }
 
+  get formData() { return <FormArray>this.form.get('pie'); }
 
 }

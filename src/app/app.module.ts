@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { DialogComponent } from './views/shared/dialog/dialog.component';
+import { StatusServerDialog } from './views/shared/status-server-dialog/status-server-dialog.component';
+
 
 
 //ANGULAR MATERIAL
@@ -15,8 +17,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { StatusServerDialog } from './views/shared/status-server-dialog/status-server-dialog.component';
-
 
 
 @NgModule({
@@ -35,7 +35,7 @@ import { StatusServerDialog } from './views/shared/status-server-dialog/status-s
     MatToolbarModule,
     HttpClientModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,13 +1,14 @@
-<div class="add">
-
+<div class="container">
   <h2 class="text-center mt-3 mb-0"> Ingrese las empanadas que desee agregar</h2> <br>
 
+  <!-- Form container-->
   <form *ngIf="form && !isSavingForm" [formGroup]="form" class="form">
-    <div formArrayName="pies" *ngFor="let item of form.get('pies').controls; let i = index;">
+    <div formArrayName="pies" *ngFor="let item of formData.controls; let i = index;">
       <div [formGroupName]="i">
         <table class="example-full-width m-auto" cellspacing="0">
           <tr>
             <td>
+              <!-- Variety input-->
               <mat-form-field class="example-full-width">
                 <mat-label>Variedad</mat-label>
                 <input matInput formControlName="variety" placeholder="Ej. Carne">
@@ -17,6 +18,7 @@
               </mat-form-field>
             </td>
             <td>
+              <!-- Price input-->
               <mat-form-field class="example-full-width">
                 <mat-label>Precio $</mat-label>
                 <input matInput formControlName="price" placeholder="Ej. 5.75" type="number">
@@ -32,18 +34,20 @@
     </div>
   </form>
 
+  <!-- Buttons: only enabled when is not saving data -->
   <div class="buttons text-center" *ngIf="!isSavingForm">
+    <!-- Button: back to home page -->
     <button mat-raised-button (click)="back()" color="warn">Volver</button>
+    <!-- Button: add input fields -->
     <button mat-raised-button (click)="addInputPies()">+ Agregar otra
       empanada</button>
-    <!--<button mat-raised-button (click)="ejemplo()">Agregar plantilla ejemplo (Desarrollador)</button>-->
+    <!-- Button: add const data (only for testing) -->
+    <button mat-raised-button (click)="ejemplo()">Agregar plantilla ejemplo (Desarrollador)</button>
+    <!-- Button: saving data -->
     <button mat-raised-button (click)="addPies()" [disabled]="!form.valid" color="primary">Finalizar</button>
   </div>
 
-  <div *ngIf="isSavingForm">
-    <div class="row justify-content-center mt-5">
-      <mat-spinner></mat-spinner>
-    </div>
-    <p class="text-center mt-5">GUARDANDO DATOS. POR FAVOR NO CIERRE.</p>
-  </div>
+  <!-- Spinner while data is saving in the BD -->
+  <app-spinner textSpinner='Guardando datos. Por favor aguarde unos segundos.' *ngIf="isSavingForm"></app-spinner>
+
 </div>

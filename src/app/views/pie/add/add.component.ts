@@ -58,6 +58,7 @@ export class AddComponent {
     },
       (error) => {
         this.openDialog(error.error.message)
+        this.isSavingForm = false;
       })
   }
 
@@ -82,7 +83,10 @@ export class AddComponent {
     },
       (error) => {
         this.openDialog(error.error.message)
+        this.isSavingForm = false;
       })
   }
+
+  get formData() { return <FormArray>this.form.get('pies'); }
 
 }
