@@ -14,43 +14,47 @@ import { Pie } from 'src/app/interfaces/pie/pie'
 })
 export class AddComponent {
 
-  form: FormGroup;
-  pies: FormArray;
-  isSavingForm: boolean;
+  form: FormGroup
+  pies: FormArray
+  isSavingForm = false
 
   constructor(private fb: FormBuilder, private connect: BdConnectionPieService, private router: Router, private provider: ProvidersService, public dialog: MatDialog) {
     this.form = this.fb.group({
       pies: this.fb.array([this.createPie()])
     })
-    this.isSavingForm = false;
   }
 
+  /** Dialog for server response message */
   openDialog(message?: string) {
     this.dialog.open(StatusServerDialog, {
       data: {
-        message: message,
-      },
-    });
+        message: message
+      }
+    })
   }
 
+  /** Back to home page */
   back() {
     this.router.navigate(['pie'])
   }
 
+  /** Create new formgroup and returned */
   createPie(): FormGroup {
     return this.fb.group({
       variety: new FormControl('', [Validators.required]),
       price: new FormControl('', [Validators.required])
-    });
+    })
   }
 
+  /** Create new input field */
   addInputPies(): void {
     this.pies = this.form.get('pies') as FormArray;
     this.pies.push(this.createPie())
   }
 
+  /** connect to DB for saving data */
   addPies() {
-    this.isSavingForm = true;
+    this.isSavingForm = true
     this.connect.postPie(this.form.value['pies']).subscribe((message) => {
       const mess = JSON.stringify(message.message)
       this.openDialog(mess.replace(/\"/g, ""))
@@ -58,13 +62,13 @@ export class AddComponent {
     },
       (error) => {
         this.openDialog(error.error.message)
-        this.isSavingForm = false;
+        this.isSavingForm = false
       })
   }
 
-
-  ejemplo() {
-    this.isSavingForm = true;
+  /** Create data in BD: only for testing purpose */
+  addConstData() {
+    this.isSavingForm = true
     const pie: Pie[] = [
       { variety: "jamon y queso", price: 50 },
       { variety: "queso y cebolla", price: 50 },
@@ -74,7 +78,7 @@ export class AddComponent {
       { variety: "atun", price: 50 },
       { variety: "humita", price: 50 },
       { variety: "caprese", price: 50 },
-      { variety: "verdura", price: 50 },
+      { variety: "verdura", price: 50 }
     ]
     this.connect.postPie(pie).subscribe((message) => {
       const mess = JSON.stringify(message.message)
@@ -83,10 +87,12 @@ export class AddComponent {
     },
       (error) => {
         this.openDialog(error.error.message)
-        this.isSavingForm = false;
+        this.isSavingForm = false
       })
   }
 
-  get formData() { return <FormArray>this.form.get('pies'); }
+  get formData() {
+    return <FormArray>this.form.get('pies');
+  }
 
 }

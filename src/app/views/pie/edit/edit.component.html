@@ -40,7 +40,7 @@
 
   <div class="buttons text-center" *ngIf="!isSavingForm">
     <button mat-raised-button (click)="back()" color="warn">Volver</button>
-    <button mat-raised-button (click)="update()" [disabled]="!form.valid" color="accent">Actualizar</button>
+    <button mat-raised-button (click)="updatePies()" [disabled]="!form.valid" color="accent">Actualizar</button>
   </div>
 
   <!-- Spinner while data is saving in the BD -->

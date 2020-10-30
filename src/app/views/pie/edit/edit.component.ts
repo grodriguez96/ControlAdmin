@@ -14,21 +14,22 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class EditComponent {
   form: FormGroup;
-  isSavingForm: boolean;
+  isSavingForm = false;
 
   constructor(private provider: ProvidersService, private fb: FormBuilder, private connect: BdConnectionPieService, private router: Router, public dialog: MatDialog) {
     this.initForm();
-    this.isSavingForm = false;
   }
 
+  /** Dialog for server response message */
   openDialog(message: string) {
     this.dialog.open(StatusServerDialog, {
       data: {
-        message: message,
-      },
-    });
+        message: message
+      }
+    })
   }
 
+  /** Create new form with the data in providerServices */
   initForm() {
     this.form = this.fb.group({
       pie: this.fb.array(
@@ -36,16 +37,18 @@ export class EditComponent {
           this.fb.group({
             id: new FormControl(pie.id),
             variety: new FormControl(pie.variety, [Validators.required]),
-            price: new FormControl(pie.price, [Validators.required]),
+            price: new FormControl(pie.price, [Validators.required])
           })
         )
       )
     })
   }
 
-  update() {
-    this.isSavingForm = true;
-    if (this.form.value['pie'].length == 1) {
+  /** connect to DB for update data */
+  updatePies() {
+    this.isSavingForm = true; /** Start spinner */
+
+    if (this.form.value['pie'].length == 1) { /** If is only one data to change */
       const data: Pie = {
         variety: this.form.get('pie').value[0].variety,
         price: this.form.get('pie').value[0].price
@@ -58,10 +61,10 @@ export class EditComponent {
         this.router.navigate(['pie'])
       }, (error) => {
         this.openDialog(error.error.message)
-        this.isSavingForm = false;
+        this.isSavingForm = false
       })
 
-    } else {
+    } else { /** If data is greater than one */
       this.connect.putPies(this.form.value['pie']).subscribe(message => {
         const mess = JSON.stringify(message.message)
         this.openDialog(mess.replace(/\"/g, ""))
@@ -69,16 +72,18 @@ export class EditComponent {
 
       }, (error) => {
         this.openDialog(error.error.message)
-        this.isSavingForm = false;
+        this.isSavingForm = false
       })
     }
-
   }
 
+  /** Back to home page */
   back() {
     this.router.navigate(['pie'])
   }
 
-  get formData() { return <FormArray>this.form.get('pie'); }
+  get formData() {
+    return <FormArray>this.form.get('pie');
+  }
 
 }

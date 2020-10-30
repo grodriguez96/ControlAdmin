@@ -92,7 +92,6 @@ export class PieComponent {
   /** Send data to services and navigate to edit page */
   sendPies(): void {
     this.provider.editData = this.selection.selected;
-    this.provider.editStatus = true;
     this.router.navigate(['pie/edit'])
 
   }
@@ -156,11 +155,10 @@ export class PieComponent {
 
   /** Add new Pies */
   addPies() {
-    this.provider.addStatus = true;
     this.router.navigate(["pie/add"])
   }
 
-  /** Open dialgo to confirm action */
+  /** Open dialog to confirm action */
   openDialogConfirm(option: string) {
     const resultD = this.dialog.open(DialogComponent, {
       data: {
@@ -171,6 +169,7 @@ export class PieComponent {
     return resultD;
   }
 
+  /** */
   openDialogStatus(message: string) {
     this.dialog.open(StatusServerDialog, {
       data: {
