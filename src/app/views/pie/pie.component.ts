@@ -102,9 +102,8 @@ export class PieComponent {
       this.openDialogConfirm('eliminateO').afterClosed().subscribe(confirm => {
         if (confirm) {
           this.isDeletingResults = true;
-          this.connect.deletePie(row.id).subscribe(message => {
-            const mess = JSON.stringify(message.message)
-            this.openDialogStatus(mess.replace(/\"/g, ""))
+          this.connect.deletePie(row.id).subscribe(servResponse => {
+            this.openDialogStatus(servResponse['message'])
             this.initData();
             this.selection.clear();
           }, () => {
@@ -121,9 +120,8 @@ export class PieComponent {
     this.openDialogConfirm('eliminateM').afterClosed().subscribe(confirm => {
       if (confirm) {
         this.isDeletingResults = true;
-        this.connect.deletePies(this.selection.selected).subscribe(message => {
-          const mess = JSON.stringify(message.message)
-          this.openDialogStatus(mess.replace(/\"/g, ""))
+        this.connect.deletePies(this.selection.selected).subscribe(servResponse => {
+          this.openDialogStatus(servResponse['message'])
           this.initData();
           this.selection.clear();
         }, () => {
@@ -153,7 +151,7 @@ export class PieComponent {
     else return true
   }
 
-  /** Add new Pies */
+  /** Navigate to add new Pies */
   addPies() {
     this.router.navigate(["pie/add"])
   }

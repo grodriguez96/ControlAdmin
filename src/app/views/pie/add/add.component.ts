@@ -25,10 +25,11 @@ export class AddComponent {
   }
 
   /** Dialog for server response message */
-  openDialog(message?: string) {
+  openDialog(message: string, pies?: Pie[]) {
     this.dialog.open(StatusServerDialog, {
       data: {
-        message: message
+        message: message,
+        pies: pies ?? null
       }
     })
   }
@@ -52,47 +53,45 @@ export class AddComponent {
     this.pies.push(this.createPie())
   }
 
-  /** connect to DB for saving data */
-  addPies() {
-    this.isSavingForm = true
-    this.connect.postPie(this.form.value['pies']).subscribe((message) => {
-      const mess = JSON.stringify(message.message)
-      this.openDialog(mess.replace(/\"/g, ""))
-      this.router.navigate(['pie'])
-    },
-      (error) => {
-        this.openDialog(error.error.message)
-        this.isSavingForm = false
-      })
+  /** If there are repeat pie  */
+  repeatPie(): boolean {
+    let x = 0, y = 0, repeat = false;
+    while (x < this.form.controls['pies'].value.length && !repeat) {
+      y = 1 + x
+      while (!repeat && y < this.form.controls['pies'].value.length) {
+        this.form.controls['pies'].value[x].variety.toUpperCase() === this.form.controls['pies'].value[y].variety.toUpperCase() ? repeat = true : y++;
+      }
+      x++;
+    }
+    return repeat;
   }
 
-  /** Create data in BD: only for testing purpose */
-  addConstData() {
-    this.isSavingForm = true
-    const pie: Pie[] = [
-      { variety: "jamon y queso", price: 50 },
-      { variety: "queso y cebolla", price: 50 },
-      { variety: "roquefort", price: 50 },
-      { variety: "carne", price: 50 },
-      { variety: "pollo", price: 50 },
-      { variety: "atun", price: 50 },
-      { variety: "humita", price: 50 },
-      { variety: "caprese", price: 50 },
-      { variety: "verdura", price: 50 }
-    ]
-    this.connect.postPie(pie).subscribe((message) => {
-      const mess = JSON.stringify(message.message)
-      this.openDialog(mess.replace(/\"/g, ""))
-      this.router.navigate(['pie'])
-    },
-      (error) => {
-        this.openDialog(error.error.message)
-        this.isSavingForm = false
-      })
+  /** Connect to DB for saving data */
+  addPies() {
+
+    if (this.repeatPie()) {
+      this.openDialog("Contiene elementos repetidos, por favor revisar nuevamente el nombre de las empanadas a ingresar")
+    } else {
+      this.isSavingForm = true
+      this.connect.postPie(this.form.value['pies']).subscribe((servResponse) => {
+        this.openDialog(servResponse['message']);
+        this.router.navigate(['pie'])
+      },
+        (servResponse) => {
+          this.openDialog(servResponse.error['message'], servResponse.error['pies'])
+          this.isSavingForm = false
+        })
+    }
+
   }
 
   get formData() {
     return <FormArray>this.form.get('pies');
+  }
+
+  delete(i: number) {
+    this.pies = this.form.get('pies') as FormArray;
+    this.pies.removeAt(i);
   }
 
 }

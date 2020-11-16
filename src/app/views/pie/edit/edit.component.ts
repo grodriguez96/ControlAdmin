@@ -21,10 +21,11 @@ export class EditComponent {
   }
 
   /** Dialog for server response message */
-  openDialog(message: string) {
+  openDialog(message: string, pies?: Pie[]) {
     this.dialog.open(StatusServerDialog, {
       data: {
-        message: message
+        message: message,
+        pies: pies ?? null
       }
     })
   }
@@ -44,8 +45,22 @@ export class EditComponent {
     })
   }
 
+  /** If there are repeat pie  */
+  repeatPie(): boolean {
+    let x = 0, y = 0, repeat = false;
+    while (x < this.form.value['pie'].length && !repeat) {
+      y = 1 + x
+      while (!repeat && y < this.form.value['pie'].length) {
+        this.form.value['pie'][x].variety.toUpperCase() === this.form.value['pie'][y].variety.toUpperCase() ? repeat = true : y++;
+      }
+      x++;
+    }
+    return repeat;
+  }
+
   /** connect to DB for update data */
   updatePies() {
+
     this.isSavingForm = true; /** Start spinner */
 
     if (this.form.value['pie'].length == 1) { /** If is only one data to change */
@@ -55,25 +70,30 @@ export class EditComponent {
       }
       const id = this.form.get('pie').value[0].id;
 
-      this.connect.putPie(data, id).subscribe(message => {
-        const mess = JSON.stringify(message.message)
-        this.openDialog(mess.replace(/\"/g, ""))
+      this.connect.putPie(data, id).subscribe(servResponse => {
+        this.openDialog(servResponse['message'])
         this.router.navigate(['pie'])
-      }, (error) => {
-        this.openDialog(error.error.message)
+      }, (servResponse) => {
+        this.openDialog(servResponse.error['message'])
         this.isSavingForm = false
       })
 
     } else { /** If data is greater than one */
-      this.connect.putPies(this.form.value['pie']).subscribe(message => {
-        const mess = JSON.stringify(message.message)
-        this.openDialog(mess.replace(/\"/g, ""))
-        this.router.navigate(['pie'])
 
-      }, (error) => {
-        this.openDialog(error.error.message)
+      if (this.repeatPie()) {
+        this.openDialog("Contiene elementos repetidos, por favor revisar nuevamente el nombre de las empanadas a ingresar")
         this.isSavingForm = false
-      })
+      } else {
+        this.connect.putPies(this.form.value['pie']).subscribe(servResponse => {
+          this.openDialog(servResponse['message'])
+          this.router.navigate(['pie'])
+          this.isSavingForm = false;
+
+        }, (servResponse) => {
+          this.openDialog(servResponse.error['message'], servResponse.error['pies'])
+          this.isSavingForm = false
+        })
+      }
     }
   }
 

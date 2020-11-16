@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Pie } from 'src/app/interfaces/pie/pie';
 
 
 @Component({
@@ -9,6 +10,6 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class StatusServerDialog {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string }) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string, pies: Pie[] }) {
   }
 }

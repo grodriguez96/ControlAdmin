@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Pie } from '../../interfaces/pie/pie'
-import { Message } from '../../interfaces/dialog/message'
-
 
 @Injectable({
   providedIn: 'root'
@@ -17,31 +15,38 @@ export class BdConnectionPieService {
 
   url = this.online
 
-  getAllPie() { /** Get all data in pie columns */
+  /** Get all data in pie columns */
+  getAllPie() {
     return this.http.get<Pie[]>(`${this.url}/pie`)
   }
 
-  postPie(data: Array<Pie>) { /** Create one or multiples pies */
-    return this.http.post<Message>(`${this.url}/pie`, data)
+  /** Create one or multiples pies */
+  postPie(data: Array<Pie>) {
+    return this.http.post(`${this.url}/pie`, data)
   }
 
-  putPies(data: Array<Pie>) { /** Edit data of multiples pies */
-    return this.http.put<Message>(`${this.url}/pie`, data)
+  /** Edit data of multiples pies */
+  putPies(data: Array<Pie>) {
+    return this.http.put(`${this.url}/pie`, data)
   }
 
-  putPie(data: Pie, id: number) { /*** Edit data of one pie */
-    return this.http.put<Message>(`${this.url}/pie/${id}`, data)
+  /** Edit data of one pie */
+  putPie(data: Pie, id: number) {
+    return this.http.put(`${this.url}/pie/${id}`, data)
   }
 
-  getPie(id: number) { /** Get data of one pie. IMPORTANT: NOT IMPLEMENTED YET !*/
+  /** Get data of one pie */
+  getPie(id: number) {
     return this.http.get(`${this.url}/${id}`)
   }
 
-  deletePie(id: number) { /**Delete data of one pies */
-    return this.http.delete<Message>(`${this.url}/pie/${id}`)
+  /**Delete data of one pies */
+  deletePie(id: number) {
+    return this.http.delete(`${this.url}/pie/${id}`)
   }
 
+  /**Delete data of multiples pies */
   deletePies(data: Pie[]) {
-    return this.http.put<Message>(`${this.url}/deletepies`, data)
+    return this.http.put(`${this.url}/deletepies`, data)
   }
 }

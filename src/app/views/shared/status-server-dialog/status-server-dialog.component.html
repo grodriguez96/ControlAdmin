@@ -1,5 +1,12 @@
 <div>
   <div mat-dialog-content>{{data.message}}</div>
+  <div *ngIf="data.pies"> <br>
+    <ul>
+      <li *ngFor="let pie of data.pies" class="text-capitalize">
+        {{pie}}
+      </li>
+    </ul>
+  </div>
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cerrar</button>
   </mat-dialog-actions>

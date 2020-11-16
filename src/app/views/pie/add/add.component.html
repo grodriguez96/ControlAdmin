@@ -6,15 +6,18 @@
     <div formArrayName="pies" *ngFor="let item of formData.controls; let i = index;">
       <div [formGroupName]="i">
         <table class="example-full-width m-auto" cellspacing="0">
+
           <tr>
             <td>
               <!-- Variety input-->
               <mat-form-field class="example-full-width">
+
                 <mat-label>Variedad</mat-label>
                 <input matInput formControlName="variety" placeholder="Ej. Carne">
                 <mat-error>
                   Este campo es obligatorio.
                 </mat-error>
+
               </mat-form-field>
             </td>
             <td>
@@ -26,6 +29,11 @@
                   Este campo es obligatorio.
                 </mat-error>
               </mat-form-field>
+            </td>
+            <td>
+              <button mat-icon-button (click)="delete(i)" color="warn">
+                <mat-icon>clear</mat-icon>
+              </button>
             </td>
           </tr>
         </table>
@@ -41,10 +49,9 @@
     <!-- Button: add input fields -->
     <button mat-raised-button (click)="addInputPies()">+ Agregar otra
       empanada</button>
-    <!-- Button: add const data (only for testing) -->
-    <!--<button mat-raised-button (click)="addConstData()">Agregar plantilla ejemplo (Desarrollador)</button>-->
     <!-- Button: saving data -->
-    <button mat-raised-button (click)="addPies()" [disabled]="!form.valid" color="primary">Finalizar</button>
+    <button mat-raised-button (click)="addPies()" [disabled]="!form.valid || form.value['pies'].length === 0"
+      color="primary">Finalizar</button>
   </div>
 
   <!-- Spinner while data is saving in the BD -->
